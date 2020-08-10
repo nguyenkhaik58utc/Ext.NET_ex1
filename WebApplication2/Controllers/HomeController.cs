@@ -96,7 +96,8 @@ namespace WebApplication2.Controllers
             return this.Direct();
         }
 
-        public ActionResult Table() {
+        public ActionResult Table()
+        {
             string xyz = DateTime.Now.ToString("MM/dd/yyyy hh:mm");
             var selectValue = from c in db.companies
                               join p in db.prices
@@ -111,6 +112,29 @@ namespace WebApplication2.Controllers
                               };
             var abc = selectValue.ToList();
             return View(abc);
+        }
+        public ActionResult Add_Click(string nameCompany, string price,string firstChange,string lassChange,string date)
+        {
+            DirectResult r = new DirectResult();
+            var id = db.companies.Where(c => c.name == nameCompany).ToList();
+            int idComp = id[id.Count - 1].id;
+            string[] date1 = date.Split('T');
+            String[] date2 = date1[0].Split('-');
+            string dateNow = date2[1] + "/" + date2[2] + "/" + date2[0].Remove(0,1);
+            var newPrice = new price()
+            {
+                id_company = idComp,
+                price1 = Convert.ToDouble(price),
+                firstChange = Convert.ToDouble(firstChange),
+                lastChange = Convert.ToDouble(lassChange),
+                lastUpdate = Convert.ToDateTime(dateNow)
+
+            };
+            db.prices.Add(newPrice);
+            db.SaveChanges();
+            r.Success = false;
+            r.ErrorMessage = "Done";
+            return Redirect("/Home/Table");
         }
 
     }

@@ -21,54 +21,6 @@
 </head>
 <body>
 
-    @(X.Action()
-            .ID("AddAction")
-            .Icon(Icon.Add)
-            .Text("Add")
-            .StyleSpec("background-color : #00FFFF")
-            .Disabled(true)
-            .Handler(MvcUtils.StringifyScriptBlock(@<text>
-                <script type="text/javascript">
-                    var rec = #{GridPanel1}.getSelectionModel().getSelection()[0];
-                    if (rec) {
-                        Ext.Msg.alert('Add', 'Add' + rec.get('nameCompany'));
-                    }
-                </script>
-            </text>))
-    )
-    @(
-        X.Action()
-            .ID("EditAction")
-            .Icon(Icon.NoteEdit)
-            .Text("Edit")
-            .StyleSpec("background-color : #00FFFF")
-            .Disabled(true)
-            .Handler(MvcUtils.StringifyScriptBlock(@<text>
-                <script type="text/javascript">
-                    var rec = #{GridPanel1}.getSelectionModel().getSelection()[0];
-                    if (rec) {
-                        Ext.Msg.alert('Edit', 'Edit ' + rec.get('nameCompany'));
-                    }
-                </script>
-            </text>))
-    )
-    @(
-        X.Action()
-            .ID("DeleteAction")
-            .Icon(Icon.Delete)
-            .Text("Delete")
-            .StyleSpec("background-color : #00FFFF")
-            .Disabled(true)
-            .Handler(MvcUtils.StringifyScriptBlock(@<text>
-                <script type="text/javascript">
-                    var rec = #{GridPanel1}.getSelectionModel().getSelection()[0];
-                    if (rec) {
-                        Ext.Msg.alert('Delete', 'Delete' + rec.get('nameCompany'));
-                    }
-                </script>
-            </text>))
-    )
-
     <h2 style="padding-left:20px">Table</h2>
     @(Html.X().ResourceManager())
     @(X.Viewport()
@@ -81,9 +33,7 @@
                         .Title("Width=0.3")
                         .DockedItems(
                             X.Toolbar().Items(
-                                new ActionRef("#{AddAction}"),
-                                new ActionRef("#{EditAction}"),
-                                new ActionRef("#{DeleteAction}")
+                                X.Image()
                 )
                         ),
 
@@ -101,7 +51,6 @@
                     X.Panel()
                         .ColumnWidth(0.3)
                         .Height(100)
-                        .Html("abc xyz")
                         .Title("Width=0.3px")
                         .Items(
                             X.Button()
@@ -109,12 +58,7 @@
                                 .Icon(Icon.Add)
                                 .Text("Add")
                                 .StyleSpec("margin-top:15px;margin-left:15px")
-                                .OnClientClick("Ext.Msg.alert('ENTER', 'ENTER is intercepted by Button2');"),
-                            X.Button()
-                                .Weight(100)
-                                .Icon(Icon.NoteEdit)
-                                .Text("Edit")
-                                .StyleSpec("margin-top:15px;margin-left:15px"),
+                                .Handler("App.WindowsEdit.show(this)"),
                             X.Button()
                                 .Weight(100)
                                 .Icon(Icon.Delete)
@@ -122,22 +66,52 @@
                                 .StyleSpec("margin-top:15px;margin-left:15px")
         ))
         )
-    @(
-        X.Menu().ID("ContextMenu")
-            .Items(
-                new ActionRef("#{AddAction}"),
-                new ActionRef("#{EditAction}"),
-                new ActionRef("#{DeleteAction}")
-            )
-    )
-    @(
+    @(X.FormPanel()
+        .ID("FormPanel1")
+        .Title("Company data")
+        .ColumnWidth(1)
+        .BodyPadding(5)
+        .Layout(LayoutType.Column)
+        .FieldDefaults(fd => {
+            fd.LabelAlign = LabelAlign.Left;
+            fd.MsgTarget = MessageTarget.Side;
+        })
+        .Buttons(
+            X.Button()
+                .Weight(100)
+                .Icon(Icon.Add)
+                .Text("Add")
+                .StyleSpec("margin-top:15px;margin-left:15px")
+                .OnClientClick("App.WindowsEdit.show(this)"),
+           X.Button()
+                .Text("Edit")
+                .Icon(Icon.NoteEdit)
+                .OnClientClick(@"var form = this.up('form'),
+                                     r = form.getForm().getRecord();
+
+                                 if (r) {
+                                     form.getForm().updateRecord(form.down('grid').getSelectionModel().getLastSelected());
+                                 }"),
+           X.Button()
+                .Weight(100)
+                .Icon(Icon.Delete)
+                .Text("Delete"),
+           X.Button()
+                .Icon(Icon.ControlRemove)
+                .Text("Reset Fields")
+                .OnClientClick("this.up('form').getForm().reset();"), 
+           X.Button()
+                .Text("Get Values...")
+                .OnClientClick("alert(Ext.encode(this.up('form').getForm().getValues()));")
+        )
+        .Items(
         X.GridPanel()
             .ID("GridPanel1")
+            .ColumnWidth(0.7)
             .ColumnLines(true)
             .Title("Get all record")
-            .ColumnWidth(1)
-            .MarginSpec("0 0 0 0")
-            .Height(350)
+            .Padding(20)
+            .Listeners(l => l.SelectionChange.Handler = "if (selected[0]) { this.up('form').getForm().loadRecord(selected[0]); }")
             .Store(
                 X.Store().ID("Store1")
                     .Model(X.Model().Fields(
@@ -155,27 +129,102 @@
                 X.Column().Text("Fisrt Change").DataIndex("firstChange").Renderer("firstChange"),
                 X.Column().Text("Last Change").DataIndex("lastChange").Renderer("lastChange"),
                 X.Column().Text("Last Updated").DataIndex("lastUpdate")
-            )
-            .SelectionModel(
-                X.RowSelectionModel()
-                    .Listeners(l => l.SelectionChange.Handler = MvcUtils.StringifyScriptBlock(@<text>
-                        <script type="text/javascript">
-                            if (selected.length) {
-                                #{EditAction}.enable();
-                                #{AddAction}.enable();
-                                #{DeleteAction}.enable();
-                            } else {
-                                #{AddAction}.disable();
-                                #{EditAction}.disable();
-                                #{DleteAction}.disable();
-                            }
-                        </script>
-                    </text>))
+            ),
+
+        X.FieldSet()
+            .ColumnWidth(0.3)
+            .Title("Abc")
+            .Padding(20)
+            .Defaults(d => { d.Add(new Parameter("LabeWidth", "115")); })
+            .Items(
+            X.TextField()
+                    .Name("nameCompany")
+                    .FieldLabel("Name"),
+                X.TextField()
+                    .Name("price")
+                    .FieldLabel("Price"),
+                X.TextField()
+                    .Name("lastChange")
+                    .FieldLabel("Change (%)"),
+                X.DateField()
+                    .Name("lastUpdate")
+                    .FieldLabel("Last Updated")
+            )            
             )
         )
-
-
     <p>asjkhdjskad</p>
+    @(X.Window()
+        .Hidden(true)
+        .ID("WindowsEdit")
+        .MinWidth(400)
+        .Padding(20)
+        .Title("Edit price company")
+        .Layout(LayoutType.Form)
+        .Items(
+            X.TextField()
+            .ID("txtNameComp")
+            .Name("Name Company")
+            .Enable(false)
+            .FieldLabel("Name Company")
+            .AllowBlank(false)
+            .BlankText("Your username is required"),
+           X.TextField()
+            .ID("txtPrice")
+            .Name("Price")
+            .InputType(Ext.Net.InputType.Number)
+            .FieldLabel("Price")
+            .AllowBlank(false)
+            .BlankText("Your price is required"),
+           X.TextField()
+            .ID("txtFirstChange")
+            .Name("First Change")
+            .InputType(Ext.Net.InputType.Number)
+            .FieldLabel("First Change")
+            .AllowBlank(false)
+            .BlankText("Your First Change is required"),
+           X.TextField()
+            .ID("txtLastChange")
+            .Name("Last Change")
+            .InputType(Ext.Net.InputType.Number)
+            .FieldLabel("Last Change")
+            .AllowBlank(false)
+            .BlankText("Your last change is required"),
+           X.DateField()
+            .ID("txtDate")
+            .Name("date")
+            .InputType(Ext.Net.InputType.DateTime)
+            .FieldLabel("DateTime")
+            .AllowBlank(false)
+            .BlankText("Your datetime is required")
+
+
+    )
+        .Buttons(
+            X.Button()
+            .Icon(Icon.Add)
+            .Text("Add")
+            .StyleSpec("margin-top:15px;margin-left:15px")
+            .OnClientClick("Ext.Msg.alert('Add', 'Done');")
+            .Handler("handleClientClick")
+                    .DirectEvents(de =>
+                    {
+                        de.Click.Url = Url.Action("Add_Click");
+                        de.Click.ShowWarningOnFailure = false;
+                        de.Click.EventMask.ShowMask = true;
+                        de.Click.EventMask.Msg = "Verifying...";
+                        de.Click.EventMask.MinDelay = 1000;
+
+                        de.Click.ExtraParams.Add(new Parameter("nameCompany", "App.txtNameComp.value", ParameterMode.Raw));
+                        de.Click.ExtraParams.Add(new Parameter("price", "App.txtPrice.value", ParameterMode.Raw));
+                        de.Click.ExtraParams.Add(new Parameter("firstChange", "App.txtFirstChange.value", ParameterMode.Raw));
+                        de.Click.ExtraParams.Add(new Parameter("lassChange", "App.txtLastChange.value", ParameterMode.Raw));
+                        de.Click.ExtraParams.Add(new Parameter("date", "App.txtDate.value", ParameterMode.Raw));
+                    }),
+           X.Button()
+            .Icon(Icon.Cancel)
+            .Text("Cancel")
+            .StyleSpec("margin-top:15px;margin-left:15px")
+    ))
 </body>
 </html>
 
