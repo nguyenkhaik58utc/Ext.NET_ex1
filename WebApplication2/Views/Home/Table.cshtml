@@ -1,0 +1,182 @@
+﻿
+@{
+    ViewBag.Title = "Table";
+    var X = Html.X();
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <script>
+        var template = '<span style="color:{0};">{1}</span>';
+
+        var firstChange = function (value) {
+            return Ext.String.format(template, (value > 0) ? "green" : "red", value);
+        };
+
+        var lastChange = function (value) {
+            return Ext.String.format(template, (value > 0) ? "green" : "red", value + "%");
+        };
+    </script>
+</head>
+<body>
+
+    @(X.Action()
+            .ID("AddAction")
+            .Icon(Icon.Add)
+            .Text("Add")
+            .StyleSpec("background-color : #00FFFF")
+            .Disabled(true)
+            .Handler(MvcUtils.StringifyScriptBlock(@<text>
+                <script type="text/javascript">
+                    var rec = #{GridPanel1}.getSelectionModel().getSelection()[0];
+                    if (rec) {
+                        Ext.Msg.alert('Add', 'Add' + rec.get('nameCompany'));
+                    }
+                </script>
+            </text>))
+    )
+    @(
+        X.Action()
+            .ID("EditAction")
+            .Icon(Icon.NoteEdit)
+            .Text("Edit")
+            .StyleSpec("background-color : #00FFFF")
+            .Disabled(true)
+            .Handler(MvcUtils.StringifyScriptBlock(@<text>
+                <script type="text/javascript">
+                    var rec = #{GridPanel1}.getSelectionModel().getSelection()[0];
+                    if (rec) {
+                        Ext.Msg.alert('Edit', 'Edit ' + rec.get('nameCompany'));
+                    }
+                </script>
+            </text>))
+    )
+    @(
+        X.Action()
+            .ID("DeleteAction")
+            .Icon(Icon.Delete)
+            .Text("Delete")
+            .StyleSpec("background-color : #00FFFF")
+            .Disabled(true)
+            .Handler(MvcUtils.StringifyScriptBlock(@<text>
+                <script type="text/javascript">
+                    var rec = #{GridPanel1}.getSelectionModel().getSelection()[0];
+                    if (rec) {
+                        Ext.Msg.alert('Delete', 'Delete' + rec.get('nameCompany'));
+                    }
+                </script>
+            </text>))
+    )
+
+    <h2 style="padding-left:20px">Table</h2>
+    @(Html.X().ResourceManager())
+    @(X.Viewport()
+                .Layout(LayoutType.Column)
+                .Items(
+                    X.Panel()
+                        .ColumnWidth(0.3)
+                        .Height(100)
+                        .PaddingSpec("0 0 0 0")
+                        .Title("Width=0.3")
+                        .DockedItems(
+                            X.Toolbar().Items(
+                                new ActionRef("#{AddAction}"),
+                                new ActionRef("#{EditAction}"),
+                                new ActionRef("#{DeleteAction}")
+                )
+                        ),
+
+                    X.Panel()
+                        .ColumnWidth(0.4)
+                        .Height(100)
+                        .Title("Width=0.4")
+                        .Html("This is some content.")
+                        .BodyStyle("background:transparent;" )
+                        .StyleSpec("background-color : #00FFFF")
+                        .Items(
+                        X.Image()
+                        ),
+
+                    X.Panel()
+                        .ColumnWidth(0.3)
+                        .Height(100)
+                        .Html("abc xyz")
+                        .Title("Width=0.3px")
+                        .Items(
+                            X.Button()
+                                .Weight(100)
+                                .Icon(Icon.Add)
+                                .Text("Add")
+                                .StyleSpec("margin-top:15px;margin-left:15px")
+                                .OnClientClick("Ext.Msg.alert('ENTER', 'ENTER is intercepted by Button2');"),
+                            X.Button()
+                                .Weight(100)
+                                .Icon(Icon.NoteEdit)
+                                .Text("Edit")
+                                .StyleSpec("margin-top:15px;margin-left:15px"),
+                            X.Button()
+                                .Weight(100)
+                                .Icon(Icon.Delete)
+                                .Text("Delete")
+                                .StyleSpec("margin-top:15px;margin-left:15px")
+        ))
+        )
+    @(
+        X.Menu().ID("ContextMenu")
+            .Items(
+                new ActionRef("#{AddAction}"),
+                new ActionRef("#{EditAction}"),
+                new ActionRef("#{DeleteAction}")
+            )
+    )
+    @(
+        X.GridPanel()
+            .ID("GridPanel1")
+            .ColumnLines(true)
+            .Title("Get all record")
+            .ColumnWidth(1)
+            .MarginSpec("0 0 0 0")
+            .Height(350)
+            .Store(
+                X.Store().ID("Store1")
+                    .Model(X.Model().Fields(
+                        X.ModelField().Name("nameCompany"),
+                        X.ModelField().Name("price").Type(ModelFieldType.Float),
+                        X.ModelField().Name("firstChange").Type(ModelFieldType.Float),
+                        X.ModelField().Name("lastChange").Type(ModelFieldType.Float),
+                        X.ModelField().Name("lastUpdate").Type(ModelFieldType.Date).DateFormat("MM/dd/yyyy hh:mm")
+                    ))
+                    .DataSource(Model)
+            )
+            .ColumnModel(
+                X.Column().Text("Company").DataIndex("nameCompany").Flex(1),
+                X.Column().Text("Price").DataIndex("price").Renderer(RendererFormat.UsMoney),
+                X.Column().Text("Fisrt Change").DataIndex("firstChange").Renderer("firstChange"),
+                X.Column().Text("Last Change").DataIndex("lastChange").Renderer("lastChange"),
+                X.Column().Text("Last Updated").DataIndex("lastUpdate")
+            )
+            .SelectionModel(
+                X.RowSelectionModel()
+                    .Listeners(l => l.SelectionChange.Handler = MvcUtils.StringifyScriptBlock(@<text>
+                        <script type="text/javascript">
+                            if (selected.length) {
+                                #{EditAction}.enable();
+                                #{AddAction}.enable();
+                                #{DeleteAction}.enable();
+                            } else {
+                                #{AddAction}.disable();
+                                #{EditAction}.disable();
+                                #{DleteAction}.disable();
+                            }
+                        </script>
+                    </text>))
+            )
+        )
+
+
+    <p>asjkhdjskad</p>
+</body>
+</html>
+
+

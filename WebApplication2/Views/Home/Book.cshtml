@@ -1,0 +1,61 @@
+﻿@using Ext.Net;
+@using Ext.Net.MVC;
+
+@model WebApplication2.Models.ExtNetModel
+
+@{
+    Layout = null;
+    var X = Html.X();
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Ext.NET MVC Sample</title>
+
+    <link type="text/css" rel="stylesheet" href="https://speed.ext.net/www/intro/css/main.css" />
+</head>
+<body>
+    @(Html.X().ResourceManager())
+
+    <header>
+        <a href="https://ext.net/"><img src="https://speed.ext.net/identity/extnet-logo-large.png" class="logo" /></a>
+    </header>
+
+    @using (Html.BeginForm())
+    {
+        @(X.Viewport()
+                .Layout(LayoutType.Column)
+                .Items(
+                    X.Panel()
+                        .ColumnWidth(0.25)
+                        .Height(100)
+                        .PaddingSpec("0 0 0 0")
+                        .Title("Width=0.25")
+                        .Html("This is some content."),
+
+                    X.Panel()
+                        .ColumnWidth(0.5)
+                        .Height(100)
+                        .Title("Width=0.5")
+                        .Html("This is some content.")
+                        .Items(
+                        X.Image()
+                        ),
+
+                    X.Panel()
+                        .ColumnWidth(0.25)
+                        .Height(100)
+                        .Title("Width=0.25px")
+                        .Items(
+            X.Button().Weight(100).Icon(Icon.Cake).Text("cancel").StyleSpec("margin-top:15px;margin-left:15px"),
+            X.Button().Weight(100).Icon(Icon.Mouse).Text("submit").StyleSpec("margin-top:15px;margin-left:15px")
+        ))
+        )
+
+    }
+
+    <img src="https://speed.ext.net/identity/extnet-logo-large.png" />
+</body>
+</html>

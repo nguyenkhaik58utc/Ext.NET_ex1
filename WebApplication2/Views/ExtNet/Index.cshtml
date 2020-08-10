@@ -1,0 +1,57 @@
+@using Ext.Net;
+@using Ext.Net.MVC;
+
+@model WebApplication2.Models.ExtNetModel
+
+@{
+    Layout = null;
+    var X = Html.X();
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Ext.NET MVC Sample</title>
+
+    <link type="text/css" rel="stylesheet" href="https://speed.ext.net/www/intro/css/main.css" />
+</head>
+<body>
+    @(Html.X().ResourceManager())
+
+    <header>
+        <a href="https://ext.net/"><img src="https://speed.ext.net/identity/extnet-logo-large.png" class="logo" /></a>
+    </header>
+
+
+    @using (Html.BeginForm())
+    {
+
+        @(Html.X().Panel()
+            .Title(Model.Title)
+            .Height(215)
+            .Width(350)
+            .Frame(true)
+            .Collapsible(true)
+            .Cls("box")
+            .BodyPadding(5)
+            .DefaultButton("Button1")
+            .Layout(LayoutType.Anchor)
+            .DefaultAnchor("100%")
+            .Items(Html.X().TextArea()
+                .Name("message")
+                .EmptyText(Model.TextAreaEmptyText)
+                .FieldLabel("Message")
+                .Height(85)
+            )
+            .Buttons(Html.X().Button()
+                .ID("Button1")
+                .Text("Submit")
+                .Icon(Icon.Accept)
+                .DirectClickAction("SampleAction")
+            )
+        )
+
+    }
+</body>
+</html>

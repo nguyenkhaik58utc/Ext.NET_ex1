@@ -1,0 +1,99 @@
+﻿@using Ext.Net;
+@using Ext.Net.MVC;
+
+@model WebApplication2.Models.ExtNetModel
+
+@{
+    Layout = null;
+    var X = Html.X();
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Ext.NET MVC Sample</title>
+
+    <link type="text/css" rel="stylesheet" href="https://speed.ext.net/www/intro/css/main.css" />
+</head>
+<body>
+    @(Html.X().ResourceManager())
+
+    <header>
+        <a href="https://ext.net/"><img src="https://speed.ext.net/identity/extnet-logo-large.png" class="logo" /></a>
+    </header>
+
+    @using (Html.BeginForm())
+    {
+
+        @(X.HyperlinkButton()
+        .Text("Click")
+        .OnClientClick("Ext.Msg.alert('Clicked', 'HyperlinkButton');")
+        )
+
+        <h2>HyperlinkButton with Icon and Click DirectEvent</h2>
+
+        @(X.HyperlinkButton()
+            .Icon(Icon.Accept)
+            .Text("Click")
+            .DirectEvents(de =>
+                de.Click.Url = Url.Action("Button_Click")
+            )
+        )
+
+        <h2>HyperlinkButton with Right Aligned Icon</h2>
+
+        @(X.HyperlinkButton()
+           .Icon(Icon.Accept)
+           .IconAlign(IconAlign.Right)
+           .Text("Click")
+        )
+
+        <h2>HyperlinkButton with Menu</h2>
+
+        @(X.HyperlinkButton()
+           .Icon(Icon.Accept)
+           .IconAlign(IconAlign.Right)
+           .Text("Click")
+           .Menu(X.Menu()
+                  .Items(
+                      X.MenuItem()
+                       .Text("Add")
+                       .Icon(Icon.Add),
+                      X.MenuItem()
+                       .Text("Accept")
+                       .Icon(Icon.Accept)
+               )
+           )
+        )
+
+        <h2>HyperlinkButton in a ToggleGroup</h2>
+
+        @(X.HyperlinkButton()
+           .Icon(Icon.GroupAdd)
+           .Text("Add group")
+           .ToggleGroup("Group1")
+        )
+        @(X.HyperlinkButton()
+           .Icon(Icon.GroupDelete)
+           .Text("Delete  group")
+           .ToggleGroup("Group1")
+        )
+        @(X.HyperlinkButton()
+           .Icon(Icon.GroupEdit)
+           .Text("Edit group")
+           .ToggleGroup("Group1")
+        )
+
+        @(X.Button().Weight(100).Icon(Icon.Cake).Text("submit"))
+
+        @(X.Window().Title("abc").Width(500).Height(500).Layout(LayoutType.Auto).Hidden(true).Items(
+            X.Button().Weight(100).Icon(Icon.Cake).Text("cancel").StyleSpec("margin-top:15px;margin-left:15px"),
+            X.Button().Weight(100).Icon(Icon.Mouse).Text("submit").StyleSpec("margin-top:15px;margin-left:15px")
+        ))
+
+    }
+
+
+</body>
+</html>
