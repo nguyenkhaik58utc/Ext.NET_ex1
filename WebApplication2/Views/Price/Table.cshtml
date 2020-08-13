@@ -7,6 +7,9 @@
 
 <html>
 <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
     <script>
         var template = '<span style="color:{0};">{1}</span>';
 
@@ -20,53 +23,66 @@
     </script>
 </head>
 <body>
-
-    <h2 style="padding-left:20px">Table</h2>
     @(Html.X().ResourceManager())
-    @(X.Viewport()
-                .Layout(LayoutType.Column)
-                .Items(
-                    X.Panel()
-                        .ColumnWidth(0.3)
-                        .Height(100)
-                        .PaddingSpec("0 0 0 0")
-                        .Title("Width=0.3")
-                        .DockedItems(
-                            X.Toolbar().Items(
-                                X.Image()
-                )
-                        ),
+    <h2 style="padding-left:20px">Table</h2>
 
-                    X.Panel()
-                        .ColumnWidth(0.4)
-                        .Height(100)
-                        .Title("Width=0.4")
-                        .Html("This is some content.")
-                        .BodyStyle("background:transparent;" )
-                        .StyleSpec("background-color : #00FFFF")
+    
+    <div class="container-fluid">
+        <div class="row">
+            <!-- LeftMain -->
+            <div id="leftMain" class="col-md-3 " style="text-align:center" >
+                @(X.Button()
+                        .Text("Add")
+                        .Icon(Icon.Add))
+            </div>
+            <!-- Rightmain -->
+            <div id="rightMain" class="col-md-9" >
+                @(X.FormPanel()
+                        .Padding(20)
+                        .Title("Edit price company")
+                        .Layout(LayoutType.Form)
                         .Items(
-                        X.Image()
-                        ),
+                            X.TextField()
+                            .ID("txtNameComp1")
+                            .Name("Name Company")
+                            .Enable(false)
+                            .FieldLabel("Name Company")
+                            .AllowBlank(false)
+                            .BlankText("Your username is required"),
+                           X.TextField()
+                            .ID("txtPrice1")
+                            .Name("Price")
+                            .InputType(Ext.Net.InputType.Number)
+                            .FieldLabel("Price")
+                            .AllowBlank(false)
+                            .BlankText("Your price is required"),
+                           X.DateField()
+                            .ID("txtDate1")
+                            .Name("date")
+                            .InputType(Ext.Net.InputType.DateTime)
+                            .FieldLabel("DateTime")
+                            .AllowBlank(false)
+                            .BlankText("Your datetime is required")
 
-                    X.Panel()
-                        .ColumnWidth(0.3)
-                        .Height(100)
-                        .Title("Width=0.3px")
-                        .Items(
+
+    )
+                        .Buttons(
                             X.Button()
-                                .Weight(100)
-                                .Icon(Icon.Add)
-                                .Text("Add")
-                                .StyleSpec("margin-top:15px;margin-left:15px")
-                                .Handler("App.WindowsEdit.show(this)"),
-                            X.Button()
-                                .Weight(100)
-                                .Icon(Icon.Delete)
-                                .Text("Delete")
-                                .StyleSpec("margin-top:15px;margin-left:15px")
-        ))
-        )
-    @(X.FormPanel()
+                            .Icon(Icon.Add)
+                            .Text("Add")
+                            .StyleSpec("margin-top:15px;margin-left:15px")
+                            .OnClientClick("Ext.Msg.alert('Add', 'Done');"),
+                           X.Button()
+                            .Icon(Icon.Cancel)
+                            .Text("Cancel")
+                            .StyleSpec("margin-top:15px;margin-left:15px")
+                            .OnClientClick("Ext.Msg.alert('Cancel', 'Done');")
+    ))
+            </div>
+
+        </div>
+
+        @(X.FormPanel()
         .ID("FormPanel1")
         .Title("Company data")
         .ColumnWidth(1)
@@ -118,7 +134,7 @@
            X.Button()
                 .Icon(Icon.ControlRemove)
                 .Text("Reset Fields")
-                .OnClientClick("this.up('form').getForm().reset();"), 
+                .OnClientClick("this.up('form').getForm().reset();"),
            X.Button()
                 .Text("Get Values...")
                 .OnClientClick("alert(Ext.encode(this.up('form').getForm().getValues()));")
@@ -151,7 +167,7 @@
             ),
 
         X.FieldSet()
-            .ColumnWidth(0.3)
+            .ColumnWidth(0.25)
             .Title("Cập nhật")
             .Padding(20)
             .Defaults(d => { d.Add(new Parameter("LabeWidth", "115")); })
@@ -174,11 +190,10 @@
                 .Name("lastUpdate")
                 .ID("txtLastUpdateEdit")
                 .FieldLabel("Last Updated")
-            )            
+            )
             )
         )
-    <p>asjkhdjskad</p>
-    @(X.Window()
+        @(X.Window()
         .Hidden(true)
         .ID("WindowsEdit")
         .MinWidth(400)
@@ -233,6 +248,11 @@
             .Text("Cancel")
             .StyleSpec("margin-top:15px;margin-left:15px")
     ))
+        <p>asjkhdjskad</p>
+    </div>
+
+    
+   
 </body>
 </html>
 
