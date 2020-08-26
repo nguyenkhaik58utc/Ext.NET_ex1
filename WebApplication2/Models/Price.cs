@@ -18,6 +18,8 @@ namespace WebApplication2.Models
 
         public int countCmp { get; set; }
 
+        public string nameCmp { get; set; }
+
         public Price(string nameCompany, double price, double firstChange, double lastChange, DateTime? lastUpdate)
         {
             this.nameCompany = nameCompany;
@@ -27,9 +29,9 @@ namespace WebApplication2.Models
             this.lastUpdate = lastUpdate;
         }
 
-        public Price(string nameCompany, int countCmp)
+        public Price(string nameCmp, int countCmp)
         {
-            this.nameCompany = nameCompany;
+            this.nameCmp = nameCmp;
             this.countCmp = countCmp;
         }
 

@@ -23,18 +23,23 @@
     </script>
 </head>
 <body>
-    @(Html.X().ResourceManager())
     <h2 style="padding-left:20px">Table</h2>
 
 
     <div class="container-fluid">
         <div class="row">
             <!-- LeftMain -->
-            <div id="leftMain" class="col-md-3 " style="text-align:center">
-                
+            <div id="leftMain" class="col-md-4 " style="text-align:center">
+                @(X.Panel()
+                    .Border(false)
+                    .IconCls("x-fa fa-line-chart")
+                    .Flex(1)
+                    .Title("<b>Biểu đồ các công ty</b>")
+                    .ItemsFromPartial("GetData"))
+                @*@Html.Partial("GetInfor")*@
             </div>
             <!-- Rightmain -->
-            <div id="rightMain" class="col-md-9">
+            <div id="rightMain" class="col-md-8">
                 @(X.FormPanel()
                         .Padding(20)
                         .Title("Edit price company")
