@@ -1,4 +1,4 @@
-﻿
+﻿@using System.Data
 @{
     ViewBag.Title = "Table";
     var X = Html.X();
@@ -26,17 +26,15 @@
     @(Html.X().ResourceManager())
     <h2 style="padding-left:20px">Table</h2>
 
-    
+
     <div class="container-fluid">
         <div class="row">
             <!-- LeftMain -->
-            <div id="leftMain" class="col-md-3 " style="text-align:center" >
-                @(X.Button()
-                        .Text("Add")
-                        .Icon(Icon.Add))
+            <div id="leftMain" class="col-md-3 " style="text-align:center">
+                
             </div>
             <!-- Rightmain -->
-            <div id="rightMain" class="col-md-9" >
+            <div id="rightMain" class="col-md-9">
                 @(X.FormPanel()
                         .Padding(20)
                         .Title("Edit price company")
@@ -251,8 +249,8 @@
         <p>asjkhdjskad</p>
     </div>
 
-    
-   
+
+
 </body>
 </html>
 

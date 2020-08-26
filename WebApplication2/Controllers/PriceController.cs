@@ -49,8 +49,70 @@ namespace WebApplication2.Controllers
                                   lastUpdate = p.lastUpdate
                               };
             var abc = selectValue.ToList();
+            ViewData["data"] = abc;
             return View(lst);
         }
+
+        public PartialViewResult GetData()
+        {
+            var model = from a in (from c in db.companies
+                        join p in db.prices
+                        on c.id equals p.id_company
+                        orderby p.id_company
+                        select new Price()
+                        {
+                            nameCompany = c.name,
+                            price = p.price1,
+                            firstChange = p.firstChange,
+                            lastChange = p.lastChange,
+                            lastUpdate = p.lastUpdate
+                        })
+                        group a by a.nameCompany into companyGroup
+                        select new
+                        {
+                            Team = companyGroup.Key,
+                            Count = companyGroup.Count(),
+                        }; ;
+
+            var abc = model.ToList();
+            List<Price> lst = new List<Price>();
+            for(int i = 0; i< abc.Count;i++)
+            {
+                lst.Add(new Price(abc[i].Team, abc[i].Count));
+            }    
+            return PartialView(lst);
+        }
+
+        /*public Ext.Net.MVC.StoreResult GetData1()
+        {
+            var model = from a in (from c in db.companies
+                                   join p in db.prices
+                                   on c.id equals p.id_company
+                                   orderby p.id_company
+                                   select new Price()
+                                   {
+                                       nameCompany = c.name,
+                                       price = p.price1,
+                                       firstChange = p.firstChange,
+                                       lastChange = p.lastChange,
+                                       lastUpdate = p.lastUpdate
+                                   })
+                        group a by a.nameCompany into companyGroup
+                        select new
+                        {
+                            Team = companyGroup.Key,
+                            Count = companyGroup.Count(),
+                        }; ;
+
+            var abc = model.ToList();
+            List<Price> lst = new List<Price>();
+            for (int i = 0; i < abc.Count; i++)
+            {
+                lst.Add(new Price(abc[i].Team, abc[i].Count));
+            }
+            return new Ext.Net.MVC.StoreResult(lst);
+        }
+*/
         public ActionResult Add_Click(string nameCompany, string price, string firstChange, string lassChange, string date)
         {
             var a1 = db.prices.GroupBy(p => p.id_company).ToList();
