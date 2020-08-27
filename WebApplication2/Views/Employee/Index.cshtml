@@ -1,0 +1,56 @@
+﻿@{
+    ViewBag.Title = "Quản lý nhân viên";
+    var X = Html.X();
+}
+@(Html.X().ResourceManager())
+@(
+    X.Viewport()
+        .Layout(LayoutType.Border)
+        .Items(
+            X.FormPanel().Region(Region.Center)
+                        .Padding(20)
+                        .Title("Edit price company")
+                        .Layout(LayoutType.Form)
+                        .Items(
+                            X.TextField()
+                            .ID("txtNameComp1")
+                            .Name("Name Company")
+                            .Enable(false)
+                            .FieldLabel("Name Company")
+                            .AllowBlank(false)
+                            .BlankText("Your username is required"),
+                           X.TextField()
+                            .ID("txtPrice1")
+                            .Name("Price")
+                            .InputType(Ext.Net.InputType.Number)
+                            .FieldLabel("Price")
+                            .AllowBlank(false)
+                            .BlankText("Your price is required"),
+                           X.DateField()
+                            .ID("txtDate1")
+                            .Name("date")
+                            .InputType(Ext.Net.InputType.DateTime)
+                            .FieldLabel("DateTime")
+                            .AllowBlank(false)
+                            .BlankText("Your datetime is required"))
+                        .Buttons(
+                            X.Button()
+                            .Icon(Icon.Add)
+                            .Text("Add")
+                            .StyleSpec("margin-top:15px;margin-left:15px")
+                            .OnClientClick("Ext.Msg.alert('Add', 'Done');"),
+                           X.Button()
+                            .Icon(Icon.Cancel)
+                            .Text("Cancel")
+                            .StyleSpec("margin-top:15px;margin-left:15px")
+                            .OnClientClick("Ext.Msg.alert('Cancel', 'Done');")),
+            X.FormPanel().Region(Region.South).Title("South"),
+            X.FormPanel().Region(Region.West).Title("West").Layout(LayoutType.Auto).Items(
+                X.Button().Text("Add").Icon(Icon.CakeOut),
+                X.Button().Text("Edit").Icon(Icon.Button)
+                ),
+            X.FormPanel().Region(Region.North).Title("North").Items(
+                X.TextField().Text("Account"),
+                X.TextField().Text("Password")
+                ))
+        )

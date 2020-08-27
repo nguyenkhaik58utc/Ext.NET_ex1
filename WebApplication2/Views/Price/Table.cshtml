@@ -23,9 +23,6 @@
     </script>
 </head>
 <body>
-    <h2 style="padding-left:20px">Table</h2>
-
-
     <div class="container-fluid">
         <div class="row">
             <!-- LeftMain -->
@@ -35,8 +32,9 @@
                     .IconCls("x-fa fa-line-chart")
                     .Flex(1)
                     .Title("<b>Biểu đồ các công ty</b>")
-                    .ItemsFromPartial("GetData"))
+                    .ItemsFromAction("GetData"))
                 @*@Html.Partial("GetInfor")*@
+                @*@Html.Action("GetData","Price")*@
             </div>
             <!-- Rightmain -->
             <div id="rightMain" class="col-md-8">

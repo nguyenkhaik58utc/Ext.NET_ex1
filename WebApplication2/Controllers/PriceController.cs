@@ -52,7 +52,6 @@ namespace WebApplication2.Controllers
             ViewData["data"] = abc;
             return View(lst);
         }
-        [HttpGet]
         public PartialViewResult GetData()
         {
             var model = from a in (from c in db.companies
@@ -81,12 +80,6 @@ namespace WebApplication2.Controllers
                 lst1.Add(new Price(abc[i].Team, abc[i].Count));
             }    
             return PartialView(lst1);
-        }
-        [HttpGet]
-        [ValidateAntiForgeryToken]
-        public PartialViewResult GetInfor()
-        {
-            return PartialView();
         }
 
         public ActionResult Add_Click(string nameCompany, string price, string firstChange, string lassChange, string date)
